@@ -6,7 +6,7 @@ import pandas as pd
 from environs import Env
 
 env = Env()
-env.read_env('.env')
+env.read_env('.secrets')
 
 dict_morse = json.loads(env('DICT_MORSE'))
 file_path = env('FILE_PATH')
@@ -14,6 +14,7 @@ file_path = env('FILE_PATH')
 
 def separate_words_in_morse_code(morse_code: str) -> list:
     return morse_code.split("  ")
+
 
 def decipher_letters_of_the_morse_word(morse_word: str) -> str:
     word = ''
@@ -27,7 +28,7 @@ def decipher_letters_of_the_morse_word(morse_word: str) -> str:
 
 def append_phrase_on_csv_file(line: str) -> None:
     df = pd.DataFrame(data=[[line.rstrip(), datetime.datetime.now()]], columns=["mensagem", "datetime"])
-    df.to_csv(file_path, mode ="a", index = False, header=not os.path.exists(file_path))
+    df.to_csv(file_path, mode="a", index=False, header=not os.path.exists(file_path))
 
 
 if __name__ == '__main__':
@@ -37,10 +38,3 @@ if __name__ == '__main__':
     for i in list_of_morse_words:
         phrase += decipher_letters_of_the_morse_word(morse_word=i) + " "
     append_phrase_on_csv_file(line=phrase)
-
-
-# python decode_morse.py "-... --- .-  -. --- .. - .  .... --- .--- .  .  -.. .. .-  .---- ----.  -.. .  .- --. --- ... - ---  -.. .  ..--- ----- ..--- ....-"
-# python decode_morse.py "-. --- ... ... ---  --. .-. ..- .--. ---  -.-. --- -. - . --  .....  .. -. - . --. .-. .- -. - . ..."
-# python decode_morse.py ". ... - .  - .-. .- -... .- .-.. .... ---  ..-. --- ..  .--. .- .-. .-  -.-. .-. .. .- .-.  ..- --  .- .-.. --. --- .-. .. - .. -- ---  .--. .- .-. .-  -.. . -.-. .. ..-. .-. .- .-.  -.-. --- -.. .. --. ---  -- --- .-. ... ."
-
-
