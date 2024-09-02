@@ -117,3 +117,34 @@ def corrige_hora(hr_str, dct_hora = {1:"000?",2:"00?",3:"0?",4:"?"}):
     else:
         hora = dct_hora[len(hr_str)].replace("?", hr_str)
         return f"{hora[:2]}:{hora[2:]}"
+
+
+def retornar_horario_partida(horario_int):
+    if 0 <= horario_int < 6:
+        return 'MADRUGADA'
+    elif 6 <= horario_int < 12:
+        return 'MANHA'
+    elif 12 <= horario_int < 18:
+        return 'TARDE'
+    else:
+        return 'NOITE'
+
+def retornar_previsao_de_tempo_de_voo(df):
+    estimativas_date_time = df["datetime_chegada_formatted"] - df["datetime_partida_formatted"]
+    return estimativas_date_time / pd.Timedelta(hours=1)
+
+def retorna_dia_da_semana(dia_int):
+    if dia_int == 0:
+        return 'Segunda-feira'
+    elif dia_int == 1:
+        return 'Terça-feira'
+    elif dia_int == 2:
+        return 'Quarta-feira'
+    elif dia_int == 3:
+        return 'Quinta-feira'
+    elif dia_int == 4:
+        return  'Sexta-feira'
+    elif dia_int == 5:
+        return 'Sabado'
+    else:
+        return 'Domingo'
