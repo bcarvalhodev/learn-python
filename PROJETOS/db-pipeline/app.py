@@ -58,7 +58,8 @@ def feat_eng(df):
     df["dia_semana"] = df["data_voo"].dt.day_of_week.apply(lambda x: utils.retorna_dia_da_semana(x))
 
     logger.info('montando coluna  com logica de turno_partida')
-    df["turno_partida"] = df.loc[:, "datetime_partida_formatted"].dt.hour.apply(lambda x: utils.retornar_horario_partida(x))
+    df["turno_partida"] = df.loc[:, "datetime_partida_formatted"].dt.hour.apply(
+        lambda x: utils.retornar_horario_partida(x))
 
     logger.info(f'Tratamento concluído; {datetime.datetime.now()}')
     return df
@@ -97,7 +98,7 @@ if __name__ == "__main__":
     df = data_clean(df, metadados)
     logger.info(f"dataframe carregado com arquivo csv do {os.getenv('DATA_PATH')}")
     utils.null_check(df, metadados["null_tolerance"])
-    utils.keys_check(df, metadados["cols_chaves"])
+    utils.keys_check(df, metadados["cols_chaves_validacao"])
     df = feat_eng(df)
     save_data_sqlite(df)
     fetch_sqlite_data(metadados["tabela"][0])

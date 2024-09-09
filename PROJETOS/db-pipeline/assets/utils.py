@@ -16,6 +16,7 @@ def read_metadado(meta_path):
         "tipos_originais" : dict(zip(list(meta["cols_originais"]),list(meta["tipo_original"]))),
         "tipos_formatted" : dict(zip(list(meta["cols_renamed"]),list(meta["tipo_formatted"]))),
         "cols_chaves" : list(meta.loc[meta["key"] == 1]["cols_originais"]),
+        "cols_chaves_validacao" : list(meta.loc[meta["key"] == 1]["cols_renamed"]),
         "null_tolerance" : dict(zip(list(meta["cols_renamed"]), list(meta["raw_null_tolerance"]))),
         "std_str" : list(meta.loc[meta["std_str"] == 1]["cols_renamed"]),
         "corrige_hr" : list(meta.loc[meta["corrige_hr"] == 1]["cols_renamed"])
@@ -84,7 +85,7 @@ def null_check(df, null_tolerance):
     '''
     Função de validação de nulos
     INPUT: Pandas DataFrame, dicionário de colunas como chave e critério de nulo como valores
-    OUTPUT: Pandas DataFrame
+    OUTPUT: None
     '''
     for col in null_tolerance.keys():
         if  len(df.loc[df[col].isnull()])/len(df)> null_tolerance[col]:
@@ -96,12 +97,17 @@ def null_check(df, null_tolerance):
             
 def keys_check(df, cols_chaves):
     '''
-    Função ???????????????????????????
-    INPUT: ???????????????????????????
-    OUTPUT: ???????????????????????????
+    Função de validação de nulos em campos chaves primarias
+    INPUT: Pandas DataFrame, lista com as chaves primarias para validacao de campos nulos
+    OUTPUT: None
     '''
-    #colocar log info
-    pass
+    for col in cols_chaves:
+        if len(df.loc[df[col].isnull()]) == 0:
+            logger.info(
+                f"{col} nao possui valores nulos na tabela, portanto esta dentro do esperado; {datetime.datetime.now()}")
+        else:
+            logger.error(
+                f"{col} possui valores nulos na tabela, portanto nao esta dentro do esperado; {datetime.datetime.now()}")
 
 # Funções auxiliares -------------------------------------------
 
